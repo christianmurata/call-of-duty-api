@@ -41,9 +41,9 @@ class UserController {
   }
 
   login(req, res) {
-    const { login, password } = req.body;
+    const { email, password } = req.body;
 
-    User.findOne({ login }, '-posts').then(user => {
+    User.findOne({ email }, '-posts').then(user => {
       if(!user)
         return res.status(404).json({ message: 'Login inválido ou não cadastrado' });
 
