@@ -22,11 +22,11 @@ class UserController {
     
     .catch(err => {
       if(err.code === 11000)
-        return res.status(400).json('Login já em uso');
+        return res.status(400).json({ message: 'Login já em uso' });
 
-      return res.status(400).json(
-        err.errors?.login?.message || err.errors?.password?.message || err.message
-      );
+      return res.status(400).json({
+        message: err.errors?.login?.message || err.errors?.password?.message || err.message
+      });
     });
   }
 
@@ -35,25 +35,25 @@ class UserController {
 
     User.findOne({ login }, '-posts').then(user => {
       if(!user)
-        return res.status(404).send('Login inválido ou não cadastrado');
+        return res.status(404).json({ message: 'Login inválido ou não cadastrado' });
 
       user.comparePassword(password, (err, isMatch) => {
         if(err)
-          return res.status(400).json(err.message);
+          return res.status(400).json({ message: err.message });
 
         if(!isMatch)
-          return res.status(400).json('Senha inválida');
+          return res.status(400).json({message: 'Senha inválida'});
 
         const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, { 
           noTimestamp: true, 
           expiresIn: '1h' 
         });
 
-        return res.json({ token });
+        return res.json({ token, admin: user.admin });
       });
     })
 
-    .catch(err => res.status(400).json(err.message));
+    .catch(err => res.status(400).json({ message: err.message }));
   }
 }
 
