@@ -3,15 +3,19 @@ const mongoose = require('mongoose');
 const PostSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: true,
+    required: [true, 'Titulo do post é obrigatório'],
   },
   body: {
     type: String,
-    required: true
+    required: [true, 'Conteúdo do post é obrigatório'],
   },
   attach: {
     type: String,
     default: null
+  },
+  user:{
+    type:mongoose.Schema.Types.ObjectId,
+    ref:'User',
   }
 });
 

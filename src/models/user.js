@@ -13,6 +13,11 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Senha é obrigatória'],
   },
+  admin: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
   posts: [{ 
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'Post' 

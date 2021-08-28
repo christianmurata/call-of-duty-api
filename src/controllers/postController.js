@@ -1,10 +1,34 @@
+const Post = require('../models/post');
+const User = require('../models/user');
+
 class PostController {
   index(req, res) {
-    res.send('index post');
+    Post.find({})
+    
+    .then(posts => res.json(posts))
+    
+    .catch(err => res.status(400).json({ message: err.message }))
   }
   
-  create(req, res) {
-    res.send('create post');
+  async create(req, res) {
+    const { title, body, attach } = req.body;
+
+    const user = await User.findById(req.userId);
+    const post = new Post({ title, body, attach, user: req.userId }); 
+
+    if(!user.admin)
+      return res.status(401).send({ message: 'Este usuário não possui permissão para postar' });
+
+    post.save().then(post => {
+      User.findById(post.user).then(user => {
+        user.posts = [...user.posts, post];
+        user.save().then(user => res.json(post))
+      })
+    })
+
+    .catch(err => res.status(400).json({
+      message: err.errors?.title?.message || err.errors?.body?.message || err.message
+    }));
   }
 }
 
