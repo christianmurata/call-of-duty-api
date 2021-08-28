@@ -5,11 +5,15 @@ const User = require('../models/user');
 
 class UserController {
   create(req, res) {
-    const { login, password } = req.body;
+    const { login, email, password, confirmPassword } = req.body;
+
+    if(password != confirmPassword)
+      return res.status(400).json({ message: 'As senhas não conferem' });
 
     const user = new User({
       login: login.toLowerCase(),
-      password: password
+      email: email,
+      password: password,
     });
 
     user.save()
@@ -21,12 +25,15 @@ class UserController {
     })
     
     .catch(err => {
-      if(err.code === 11000)
+      if(err.code === 11000 && err.keyPattern?.login)
         return res.status(400).json({ message: 'Login já em uso' });
+
+      if(err.code === 11000 && err.keyPattern?.email)
+        return res.status(400).json({ message: 'Email já em uso' });
 
       return res.status(400).json({
         message: err.errors?.login?.message
-          || err.errors?.email?.email
+          || err.errors?.email?.message
           || err.errors?.password?.message 
           || err.message
       });
