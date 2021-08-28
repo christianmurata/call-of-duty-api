@@ -4,6 +4,7 @@ const PostSchema = new mongoose.Schema({
   title: {
     type: String,
     required: [true, 'Titulo do post é obrigatório'],
+    unique: true,
   },
   body: {
     type: String,

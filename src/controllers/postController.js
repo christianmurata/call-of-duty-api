@@ -26,9 +26,14 @@ class PostController {
       })
     })
 
-    .catch(err => res.status(400).json({
-      message: err.errors?.title?.message || err.errors?.body?.message || err.message
-    }));
+    .catch(err => {
+      if(err.code === 11000)
+        return res.status(400).json({ message: 'Já existe um post com esse titulo' });
+
+      return res.status(400).json({
+        message: err.errors?.title?.message || err.errors?.body?.message || err.message
+      })
+    });
   }
 }
 
