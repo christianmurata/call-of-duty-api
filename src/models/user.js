@@ -7,11 +7,20 @@ const UserSchema = new mongoose.Schema({
   login: {
     type: String,
     required: [true, 'Login é obrigatório'],
+    min: [3, 'Login deve ter 3 caracteres pelo menos'],
+    unique: true,
+  },
+  email: {
+    type: String,
+    required: [true, 'Email é obrigatório'],
+    min: [3, 'Email deve ter 3 caracteres pelo menos'],
+    match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Email inválido'],
     unique: true,
   },
   password: {
     type: String,
     required: [true, 'Senha é obrigatória'],
+    min: [3, 'Senha deve ter 3 caracteres pelo menos'],
   },
   admin: {
     type: Boolean,
@@ -19,7 +28,7 @@ const UserSchema = new mongoose.Schema({
     default: false
   },
   posts: [{ 
-    type: mongoose.Schema.Types.ObjectId, 
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'Post' 
   }]
 });

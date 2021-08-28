@@ -25,7 +25,10 @@ class UserController {
         return res.status(400).json({ message: 'Login já em uso' });
 
       return res.status(400).json({
-        message: err.errors?.login?.message || err.errors?.password?.message || err.message
+        message: err.errors?.login?.message
+          || err.errors?.email?.email
+          || err.errors?.password?.message 
+          || err.message
       });
     });
   }
