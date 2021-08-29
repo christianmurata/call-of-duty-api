@@ -1,7 +1,5 @@
 # Call of Duty API
 
-## Sobre
-
 API desenvolvida na plataforma node.js, utilizando express.js e mongodb
 
 ## Rotas
