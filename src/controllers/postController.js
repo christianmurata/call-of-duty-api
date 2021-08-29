@@ -4,7 +4,13 @@ const deleteAttach = require('../helpers/deleteAttach');
 
 class PostController {
   index(req, res) {
-    Post.find({})
+    let filter = {};
+    const { title } = req.query;
+
+    if(title)
+      filter = { title: new RegExp(title, 'i') };
+
+    Post.find(filter)
     
     .then(posts => res.json(posts))
     
@@ -21,6 +27,12 @@ class PostController {
       deleteAttach(req.file?.path);
 
       return res.status(401).send({ message: 'Este usuário não possui permissão para postar' });
+    }
+
+    if(!req.file?.mimetype.match(/image/i)) {
+      deleteAttach(req.file?.path);
+
+      return res.status(401).send({ message: 'Arquivo inválido. Escolha uma imagem' });
     }
 
     post.save().then(post => {

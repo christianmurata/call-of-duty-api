@@ -45,7 +45,7 @@ class UserController {
 
     User.findOne({ email }, '-posts').then(user => {
       if(!user)
-        return res.status(404).json({ message: 'Login inválido ou não cadastrado' });
+        return res.status(404).json({ message: 'Usuário não encontrado' });
 
       user.comparePassword(password, (err, isMatch) => {
         if(err)
