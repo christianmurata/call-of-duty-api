@@ -14,7 +14,7 @@ class PostController {
     const { title, body, attach } = req.body;
 
     const user = await User.findById(req.userId);
-    const post = new Post({ title, body, attach, user: req.userId }); 
+    const post = new Post({ title, body, attach: req.file?.path || null, user: req.userId }); 
 
     if(!user.admin)
       return res.status(401).send({ message: 'Este usuário não possui permissão para postar' });

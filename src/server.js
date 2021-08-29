@@ -1,6 +1,13 @@
 const express = require('express');
 const cors = require('cors');
 
+/**
+ * Image upload
+ * 
+ * @see https://flaviocopes.com/how-to-upload-files-fetch/
+ * @see https://gist.github.com/emersonbrogadev/e9de58950d2efbaca5a4b84515d01afe
+ */
+
 require('dotenv').config();
 
 const routes = require('./routes');
