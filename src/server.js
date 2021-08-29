@@ -19,6 +19,8 @@ app.use(cors());
 app.use(express.json());
 app.use(routes);
 
+app.use('/uploads', express.static('uploads'));
+
 database.connect(process.env.MONGO_URL).then(() => {
   app.listen(process.env.HTTP_PORT, () => {
     console.log(`Call Of Duty api listening at http://localhost:${process.env.HTTP_PORT}`);

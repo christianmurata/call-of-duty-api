@@ -1,5 +1,6 @@
 const Post = require('../models/post');
 const User = require('../models/user');
+const deleteAttach = require('../helpers/deleteAttach');
 
 class PostController {
   index(req, res) {
@@ -16,8 +17,11 @@ class PostController {
     const user = await User.findById(req.userId);
     const post = new Post({ title, body, attach: req.file?.path || null, user: req.userId }); 
 
-    if(!user.admin)
+    if(!user.admin) {
+      deleteAttach(req.file?.path);
+
       return res.status(401).send({ message: 'Este usuário não possui permissão para postar' });
+    }
 
     post.save().then(post => {
       User.findById(post.user).then(user => {
@@ -27,6 +31,8 @@ class PostController {
     })
 
     .catch(err => {
+      deleteAttach(req.file?.path);
+
       if(err.code === 11000)
         return res.status(400).json({ message: 'Já existe um post com esse titulo' });
 
